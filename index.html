@@ -225,7 +225,7 @@ body{
 </div>
 
 <div class="controls">
-  <input id="inputText" maxlength="60" placeholder="发泄5分钟，enter键发射" id="inputPlaceholder" autofocus>
+  <input id="inputText" maxlength="60" placeholder="发泄5分钟，enter键发射" autofocus>
   <button class="auto-btn" id="autoBtn" onclick="toggleAuto()"><span id="autoBtnText">😤 骂不动了，你替我骂</span></button>
 </div>
 
@@ -246,7 +246,7 @@ body{
 <div class="name-sidebar" id="nameSidebar">
   <div class="hint-icon">@</div>
   <div class="hint" id="nameHint">试试输入姓名</div>
-  <input id="nameInput" maxlength="10" placeholder="输入名字" id="namePlaceholder">
+  <input id="nameInput" maxlength="10" placeholder="输入名字">
   <div class="name-tag" id="nameTag"></div>
   <div class="status" id="nameStatus">已锁定目标</div>
 </div>
@@ -661,13 +661,13 @@ if(!isCN){
   if(su) su.textContent='';
   const nh=document.getElementById('nameHint');
   if(nh) nh.textContent='Target a name';
-  const np=document.getElementById('namePlaceholder');
+  const np=document.getElementById('nameInput');
   if(np) np.placeholder='Enter name';
   const ns=document.getElementById('nameStatus');
   if(ns) ns.textContent='Target locked';
   const at=document.getElementById('autoBtnText');
   if(at) at.textContent='😤 Auto Fire';
-  const ip=document.getElementById('inputPlaceholder');
+  const ip=document.getElementById('inputText');
   if(ip) ip.placeholder='Vent 5 min, press Enter';
 }
 setTimeout(()=>INPUT.focus(),100);
