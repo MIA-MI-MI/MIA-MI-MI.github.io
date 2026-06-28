@@ -392,13 +392,13 @@ function toggleAuto(){
 function startAuto(){
   if(autoFiring) return;
   autoFiring=true;
-  AUTO_BTN.textContent='😤 停！我亲自来';
+  AUTO_BTN.innerHTML='<span id="autoBtnText">'+t('😤 停！我亲自来','😤 Stop! My turn')+'</span>';
   AUTO_BTN.classList.add('firing');
   fireAuto();
 }
 function stopAuto(){
   autoFiring=false;
-  AUTO_BTN.textContent='😤 骂不动了，你替我骂';
+  AUTO_BTN.innerHTML='<span id="autoBtnText">'+t('😤 骂不动了，你替我骂','😤 Auto Fire')+'</span>';
   AUTO_BTN.classList.remove('firing');
   if(autoTimer) clearTimeout(autoTimer);
 }
@@ -435,8 +435,8 @@ function fireText(text){
 
   const fly=document.createElement('div');
   fly.className='fly-text';
-  const colors=['#ff1744','#ff6f00','#ffab00','#ff5252','#ff9100','#d500f9'];
-  fly.style.cssText='left:'+cx+'px;top:'+cy+'px;font-size:1.6rem;color:'+colors[shots%colors.length]+';text-shadow:0 0 30px '+colors[shots%colors.length];
+  const colors=['#ffffff','#00e5ff','#76ff03','#ffff00','#e040fb','#ff9100'];
+  fly.style.cssText='left:'+cx+'px;top:'+cy+'px;font-size:1.6rem;color:'+colors[shots%colors.length]+';text-shadow:0 0 15px #000,0 0 30px '+colors[shots%colors.length];
 
   const balloonRect=BODY.getBoundingClientRect();
   const bx=balloonRect.left+balloonRect.width/2;
