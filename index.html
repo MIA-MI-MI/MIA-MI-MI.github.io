@@ -225,7 +225,7 @@ body{
 </div>
 
 <div class="controls">
-  <input id="inputText" maxlength="60" placeholder="发泄5分钟，enter键发射" autofocus>
+  <input id="inputText" maxlength="60" placeholder="发泄5分钟，enter键发射" id="inputPlaceholder" autofocus>
   <button class="auto-btn" id="autoBtn" onclick="toggleAuto()"><span id="autoBtnText">😤 骂不动了，你替我骂</span></button>
 </div>
 
@@ -246,7 +246,7 @@ body{
 <div class="name-sidebar" id="nameSidebar">
   <div class="hint-icon">@</div>
   <div class="hint" id="nameHint">试试输入姓名</div>
-  <input id="nameInput" maxlength="10" placeholder="输入名字">
+  <input id="nameInput" maxlength="10" placeholder="输入名字" id="namePlaceholder">
   <div class="name-tag" id="nameTag"></div>
   <div class="status" id="nameStatus">已锁定目标</div>
 </div>
@@ -256,7 +256,6 @@ body{
 
 <script>
 // ====== INSULTS POOL ======
-const isCN = navigator.language && navigator.language.startsWith("zh");
 const INSULTS_ZH=[
   '菜鸡！！！','就这？？？','废物点心','你行你上啊','烦死了！！',
   '无语！！','摆烂了','什么玩意儿','气死我了','滚啊！！！',
@@ -273,6 +272,9 @@ INSULTS_EN=[
   "DON'T PUSH ME",'FUMING','HOPELESS','SCREW IT',"I'M DONE!!!",
   'WHO ARE YOU?','SO CRINGE','SERIOUSLY','HELP','OMG'
 ];
+// === i18n ===
+const isCN = true;
+const t = (zh, en) => isCN ? zh : en;
 const INSULTS = isCN ? INSULTS_ZH : INSULTS_EN;
 
 let shots=0;
@@ -294,7 +296,6 @@ const LABEL=document.getElementById('balloonLabel');
 const PCT=document.getElementById('balloonPct');
 const STAGE=document.querySelector('.balloon-stage');
 const AUTO_BTN=document.getElementById('autoBtn');
-const t = (zh, en) => isCN ? zh : en;
 
 const INPUT=document.getElementById('inputText');
 
@@ -391,13 +392,13 @@ function toggleAuto(){
 function startAuto(){
   if(autoFiring) return;
   autoFiring=true;
-  AUTO_BTN.textContent=t('😤 停！我亲自来','😤 Back off! I got this');
+  AUTO_BTN.textContent='😤 停！我亲自来';
   AUTO_BTN.classList.add('firing');
   fireAuto();
 }
 function stopAuto(){
   autoFiring=false;
-  AUTO_BTN.textContent=t('😤 骂不动了，你替我骂','😤 Auto Fire');
+  AUTO_BTN.textContent='😤 骂不动了，你替我骂';
   AUTO_BTN.classList.remove('firing');
   if(autoTimer) clearTimeout(autoTimer);
 }
@@ -660,12 +661,14 @@ if(!isCN){
   if(su) su.textContent='';
   const nh=document.getElementById('nameHint');
   if(nh) nh.textContent='Target a name';
-
+  const np=document.getElementById('namePlaceholder');
+  if(np) np.placeholder='Enter name';
   const ns=document.getElementById('nameStatus');
   if(ns) ns.textContent='Target locked';
   const at=document.getElementById('autoBtnText');
   if(at) at.textContent='😤 Auto Fire';
-
+  const ip=document.getElementById('inputPlaceholder');
+  if(ip) ip.placeholder='Vent 5 min, press Enter';
 }
 setTimeout(()=>INPUT.focus(),100);
 </script>
