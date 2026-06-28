@@ -220,13 +220,13 @@ body{
 <body>
 
 <div class="header">
-  <div class="title">💢 发泄出来！</div>
-  <div class="subtitle">想骂就骂，骂到爽为止</div>
+  <div class="title" id="titleMain">💢 发泄出来！</div>
+  <div class="subtitle" id="subtitleMain">想骂就骂，骂到爽为止</div>
 </div>
 
 <div class="controls">
   <input id="inputText" maxlength="60" placeholder="发泄5分钟，enter键发射" autofocus>
-  <button class="auto-btn" id="autoBtn" onclick="toggleAuto()">😤 骂不动了，你替我骂</button>
+  <button class="auto-btn" id="autoBtn" onclick="toggleAuto()"><span id="autoBtnText">😤 骂不动了，你替我骂</span></button>
 </div>
 
 <div class="balloon-stage">
@@ -240,12 +240,12 @@ body{
 </div>
 
 <div class="info">
-  已发射 <span id="shotCount">0</span> 发
+  <span id="shotLabel">已发射</span> <span id="shotCount">0</span> <span id="shotUnit">发</span>
 </div>
 
 <div class="name-sidebar" id="nameSidebar">
   <div class="hint-icon">@</div>
-  <div class="hint">试试输入姓名</div>
+  <div class="hint" id="nameHint">试试输入姓名</div>
   <input id="nameInput" maxlength="10" placeholder="输入名字">
   <div class="name-tag" id="nameTag"></div>
   <div class="status" id="nameStatus">已锁定目标</div>
@@ -256,7 +256,8 @@ body{
 
 <script>
 // ====== INSULTS POOL ======
-const INSULTS=[
+const isCN = navigator.language && navigator.language.startsWith("zh");
+const INSULTS_ZH=[
   '菜鸡！！！','就这？？？','废物点心','你行你上啊','烦死了！！',
   '无语！！','摆烂了','什么玩意儿','气死我了','滚啊！！！',
   '垃圾！！','脑残吗','受不了了','啊啊啊啊啊','什么鬼东西',
@@ -264,6 +265,15 @@ const INSULTS=[
   '别逼我','气炸了','没救了','毁灭吧','累了！！！',
   '你谁啊','真下头','离谱','救命','栓Q了'
 ];
+INSULTS_EN=[
+  'N00B!!!','IS THAT IT?!','USELESS','BRING IT ON','SO ANNOYING!!',
+  'SPEECHLESS!!','I GIVE UP','WHAT A JOKE','PISSING ME OFF','GET LOST!!!',
+  'GARBAGE!!','BRAIN DEAD',"CAN'T STAND IT",'AAAAARGH','WTF IS THAT',
+  'I GIVE UP','YOU EVEN TRY?','WHAT ARE YOU DOING','EVERY DANG DAY','YOU SERIOUSLY',
+  "DON'T PUSH ME",'FUMING','HOPELESS','SCREW IT',"I'M DONE!!!",
+  'WHO ARE YOU?','SO CRINGE','SERIOUSLY','HELP','OMG'
+];
+const INSULTS = isCN ? INSULTS_ZH : INSULTS_EN;
 
 let shots=0;
 let sessionStart=null;
@@ -284,6 +294,8 @@ const LABEL=document.getElementById('balloonLabel');
 const PCT=document.getElementById('balloonPct');
 const STAGE=document.querySelector('.balloon-stage');
 const AUTO_BTN=document.getElementById('autoBtn');
+const t = (zh, en) => isCN ? zh : en;
+
 const INPUT=document.getElementById('inputText');
 
 function getCtx(){
@@ -379,13 +391,13 @@ function toggleAuto(){
 function startAuto(){
   if(autoFiring) return;
   autoFiring=true;
-  AUTO_BTN.textContent='😤 停！我亲自来';
+  AUTO_BTN.textContent=t('😤 停！我亲自来','😤 Back off! I got this');
   AUTO_BTN.classList.add('firing');
   fireAuto();
 }
 function stopAuto(){
   autoFiring=false;
-  AUTO_BTN.textContent='😤 骂不动了，你替我骂';
+  AUTO_BTN.textContent=t('😤 骂不动了，你替我骂','😤 Auto Fire');
   AUTO_BTN.classList.remove('firing');
   if(autoTimer) clearTimeout(autoTimer);
 }
@@ -536,7 +548,7 @@ function triggerBoss(){
   setTimeout(()=>{
     const ov=document.getElementById('overlay');
     const oc=document.getElementById('overlayContent');
-    oc.innerHTML='<div style="font-size:clamp(1.8rem,8vw,4.5rem);font-weight:900;color:#ff1744;text-shadow:0 0 40px #ff1744,0 0 120px #ff174466;line-height:1.5;animation:msgIn .8s cubic-bezier(.34,1.56,.64,1) forwards">那傻逼已经收到了来自宇宙的无数暴击了!!!!!</div><div style="margin-top:1.2rem;font-size:1.2rem;color:#ff6f00;text-shadow:0 0 20px #ff6f0066;opacity:0;animation:msgSub .5s .5s forwards">✦ 气 球 爆 破 ✦</div>';
+    oc.innerHTML='<div style="font-size:clamp(1.8rem,8vw,4.5rem);font-weight:900;color:#ff1744;text-shadow:0 0 40px #ff1744,0 0 120px #ff174466;line-height:1.5;animation:msgIn .8s cubic-bezier(.34,1.56,.64,1) forwards">'+t('那傻逼已经收到了来自宇宙的无数暴击了!!!!!','THAT JERK JUST GOT OBLITERATED BY THE UNIVERSE!!!!!')+'</div><div style="margin-top:1.2rem;font-size:1.2rem;color:#ff6f00;text-shadow:0 0 20px #ff6f0066;opacity:0;animation:msgSub .5s .5s forwards">'+t('✦ 气 球 爆 破 ✦','✦ B A L L O O N  B O O M ✦')+'</div>';
     document.head.insertAdjacentHTML('beforeend','<style>@keyframes msgIn{0%{transform:scale(.1);opacity:0}100%{transform:scale(1);opacity:1}}@keyframes msgSub{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}</style>');
     ov.classList.add('active');
   },400);
@@ -568,7 +580,7 @@ function updateTimer(){
   if(!sessionStart){el.textContent='';return}
   const remaining=Math.max(0,30000-(Date.now()-sessionStart));
   let rs=Math.floor(remaining/1000), rm=Math.floor(rs/60); rs=rs%60;
-  el.textContent=remaining>0?'充能 '+String(rm).padStart(2,'0')+':'+String(rs).padStart(2,'0'):'✦ 充满! 要炸了!';
+  el.textContent=remaining>0?t('充能 ','CHARGING ')+String(rm).padStart(2,'0')+':'+String(rs).padStart(2,'0'):t('✦ 充满! 要炸了!','✦ FULL! ABOUT TO BURST! ✦');
 }
 
 // === NAME INPUT HANDLER ===
@@ -583,11 +595,11 @@ function updateNameTag(){
     if(nameLocked){
       NAME_TAG.classList.add('active');
       NAME_STATUS.style.display='block';
-      INPUT.placeholder='骂 '+targetName+'...';
+      INPUT.placeholder=t('骂 ','Yell at ')+targetName+'...';
     }else{
       NAME_TAG.classList.remove('active');
       NAME_STATUS.style.display='none';
-      INPUT.placeholder='发泄5分钟，enter键发射';
+      INPUT.placeholder=t('发泄5分钟，enter键发射','Vent 5 min, press Enter');
     }
   }else{
     NAME_TAG.style.display='none';
@@ -608,7 +620,7 @@ function clearName(){
   nameLocked=false;
   NAME_INPUT.value='';
   updateNameTag();
-  INPUT.placeholder='发泄5分钟，enter键发射';
+  INPUT.placeholder=t('发泄5分钟，enter键发射','Vent 5 min, press Enter');
   INPUT.focus();
 }
 NAME_TAG.addEventListener('click',function(){
@@ -616,12 +628,12 @@ NAME_TAG.addEventListener('click',function(){
     if(nameLocked){
       NAME_TAG.classList.remove('active');
       nameLocked=false;
-      INPUT.placeholder='发泄5分钟，enter键发射';
+      INPUT.placeholder=t('发泄5分钟，enter键发射','Vent 5 min, press Enter');
       NAME_STATUS.style.display='none';
     }else{
       NAME_TAG.classList.add('active');
       nameLocked=true;
-      INPUT.placeholder='骂 '+targetName+'...';
+      INPUT.placeholder=t('骂 ','Yell at ')+targetName+'...';
       NAME_STATUS.style.display='block';
     }
     INPUT.focus();
@@ -636,6 +648,25 @@ NAME_INPUT.addEventListener('blur',setTargetName);
 INPUT.addEventListener('keydown',(e)=>{
   if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();vent()}
 });
+// i18n: update labels
+if(!isCN){
+  const el=document.getElementById('titleMain');
+  if(el) el.textContent='💢 SCREAM IT OUT!';
+  const sub=document.getElementById('subtitleMain');
+  if(sub) sub.textContent='Vent it out, fire on Enter';
+  const sl=document.getElementById('shotLabel');
+  if(sl) sl.textContent='Shots fired';
+  const su=document.getElementById('shotUnit');
+  if(su) su.textContent='';
+  const nh=document.getElementById('nameHint');
+  if(nh) nh.textContent='Target a name';
+
+  const ns=document.getElementById('nameStatus');
+  if(ns) ns.textContent='Target locked';
+  const at=document.getElementById('autoBtnText');
+  if(at) at.textContent='😤 Auto Fire';
+
+}
 setTimeout(()=>INPUT.focus(),100);
 </script>
 </body>
