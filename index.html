@@ -273,7 +273,7 @@ INSULTS_EN=[
   'WHO ARE YOU?','SO CRINGE','SERIOUSLY','HELP','OMG'
 ];
 // === i18n ===
-const isCN = true;
+const isCN = navigator.language.startsWith("zh");
 const t = (zh, en) => isCN ? zh : en;
 const INSULTS = isCN ? INSULTS_ZH : INSULTS_EN;
 
